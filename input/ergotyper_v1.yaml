@@ -1,0 +1,150 @@
+points:
+  key:
+    padding: cy
+    spread: cx
+  zones:
+    main:
+      rows:
+        bottom:
+          row_net: P19
+        home:
+          row_net: P20
+        top:
+          row_net: P21
+        num:
+          row_net: P1
+
+      columns:
+        pinkie:
+          key.column_net: P10
+        ring:
+          key:
+            stagger: 12
+            column_net: P16
+        middle:
+          key:
+            stagger: 7
+            column_net: P14
+        index:
+          key:
+            stagger: -5
+            column_net: P15
+        far:
+          key:
+            stagger: -3
+            column_net: P18
+
+    thumb:
+      anchor:
+        ref: main_far_bottom
+        shift: [-10, -20]
+        rotate: -20
+      rows:
+        cluster:
+          row_net: P9
+      columns:
+        inner:
+          key.column_net: P8
+        outer:
+          key:
+            column_net: P7
+            rotate: -10
+            spread: cx+2
+            stagger: -2
+
+outlines:
+  raw:
+    - what: rectangle
+      where: true # Matches all keys
+      size: [cx+2, cy+2]
+
+  board:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: main_far_home
+          shift: [0.5cx,0.5cy]
+        - ref: main_far_home
+          shift: [1.6cx,0.5cy]
+        - ref: main_far_bottom
+          shift: [1.6cx,-0.5cy]
+        - ref: thumb_outer_cluster
+          shift: [0.5cx+1,0.5cy+1]
+        - ref: thumb_outer_cluster
+          shift: [0.5cx+1,-0.5cy-1]
+        - ref: thumb_inner_cluster
+          shift: [-0.5cx-1,-0.5cy-1]
+        - ref: main_pinkie_bottom
+          shift: [0.5cx+1,-0.5cy-1]
+        - ref: main_pinkie_bottom
+          shift: [-0.5cx-1,0.5cy+1]
+  
+  keycap_outlines:
+    - what: rectangle
+      where: true # Matches all keys
+      bound: false
+      size: [cx - 0.5, cy - 0.5] # Choc keycaps are 17.5 x 16.5
+
+  cutout:
+    - name: board
+    - operation: add
+      name: raw
+      fillet: 2
+
+  combo:
+    - name: cutout
+    - operation: subtract
+      name: keycap_outlines
+
+pcbs:
+  flipper:
+    outlines:
+      main:
+        outline: cutout
+    footprints:
+      controller:
+        what: nice_nano_2
+        where:
+          ref: main_far_home
+          shift: [19, -9]
+          # rotate: -90
+        params:
+          reversible: true
+
+      choc_hotswap:
+        what: choc
+        where: true
+        params:
+          keycaps: true
+          reverse: true
+          hotswap: true
+          from: "{{column_net}}"
+          to: "{{colrow}}"
+
+      diode:
+        what: diode
+        where: true
+        params:
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [0, -5]
+
+      vias:
+        what: via
+        where: true
+        params:
+          net: "{{column_net}}"
+        adjust:
+          shift: [0, 3]
+    
+      battery_connector:
+        what: bat_jst
+        where:
+          ref: main_far_bottom
+          shift: [7, -13]
+          rotate: 90
+        params:
+          BAT_P: RAW
+          BAT_N: GND
+          reversible: true
