@@ -1,0 +1,182 @@
+points:
+  key:
+    padding: cy
+    spread: cx
+  zones:
+    main:
+      rows:
+        bottom:
+        home:
+        top:
+
+      columns:
+        pinkie:
+          rows:
+            bottom.from_net: P7
+            home.from_net: P15
+            top.from_net: P4
+        ring:
+          rows:
+            bottom.from_net: P6
+            home.from_net: P18
+            top.from_net: P3
+          key:
+            stagger: 12
+        middle:
+          rows:
+            bottom.from_net: P10
+            home.from_net: P19
+            top.from_net: P2
+          key:
+            stagger: 7
+        index:
+          rows:
+            bottom.from_net: P16
+            home.from_net: P20
+            top.from_net: P0
+          key:
+            stagger: -5
+        far:
+          rows:
+            bottom.from_net: P14
+            home.from_net: P21
+            top.from_net: P1
+          key:
+            stagger: -3
+
+    thumb:
+      anchor:
+        ref: main_far_bottom
+        shift: [-10, -20]
+        rotate: -20
+      rows:
+        home:
+      columns:
+        inner:
+          rows:
+            home.from_net: P8
+        outer:
+          rows:
+            home.from_net: P9
+          key:
+            column_net: P7
+            rotate: -10
+            spread: cx+2
+            stagger: -2
+
+outlines:
+  raw:
+    - what: rectangle
+      where: true # Matches all keys
+      size: [cx+2, cy+2]
+
+  board:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: main_far_home
+          shift: [0.5cx,0.5cy]
+        - ref: main_far_home
+          shift: [1.6cx,0.5cy]
+        - ref: main_far_bottom
+          shift: [1.6cx,-0.5cy]
+        - ref: thumb_outer_home
+          shift: [0.5cx+1,0.5cy+1]
+        - ref: thumb_outer_home
+          shift: [0.5cx+1,-0.5cy-1]
+        - ref: thumb_inner_home
+          shift: [-0.5cx-1,-0.5cy-1]
+        - ref: main_ring_bottom
+          shift: [0.5cx+1,-0.5cy-1]
+        - ref: main_pinkie_bottom
+          shift: [-0.5cx-1,0.5cy+1]
+  
+  keycap_outlines:
+    - what: rectangle
+      where: true # Matches all keys
+      bound: false
+      size: [cx - 0.5, cy - 0.5] # Choc keycaps are 17.5 x 16.5
+
+  cutout:
+    - name: board
+    - operation: add
+      name: raw
+      fillet: 1.4
+
+  combo:
+    - name: cutout
+    - operation: subtract
+      name: keycap_outlines
+
+pcbs:
+  ergotyper_v2:
+    outlines:
+      main:
+        outline: cutout
+    footprints:
+      controller:
+        what: nice_nano_2
+        where:
+          ref: main_far_home
+          shift: [19, -9]
+        params:
+          reversible: true
+
+      choc_hotswap:
+        what: choc
+        where: true
+        params:
+          keycaps: true
+          reverse: true
+          hotswap: true
+          from: "{{from_net}}"
+          to: "GND"
+
+      gnd_vias:
+        what: via
+        where: true
+        params:
+          net: GND
+        adjust:
+          shift: [0, -3]
+    
+      net_vias:
+        what: via
+        where: true
+        params:
+          net: "{{from_net}}"
+        adjust:
+          shift: [0, 3]
+    
+      battery_connector:
+        what: bat_jst
+        where:
+          ref: main_far_bottom
+          shift: [7, -13]
+          rotate: 90
+        params:
+          BAT_P: BAT_P
+          BAT_N: GND
+          reversible: true
+      
+      slider_btm:
+        what: slider
+        where:
+          ref: main_far_bottom
+          shift: [23, -16]
+          rotate: -113.5
+        params:
+          side: B
+          from: BAT_P
+          to: RAW
+
+      slider:
+        what: slider
+        where:
+          ref: main_far_bottom
+          shift: [23, -16]
+          rotate: -113.5
+        params:
+          from: BAT_P
+          to: RAW
+
