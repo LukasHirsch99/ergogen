@@ -19,4 +19,5 @@ module.exports = {
     slider: require('./slider'),
     trrs: require('./trrs'),
     via: require('./via'),
+    mountinghole: require('./mountinghole.js'),
 }
