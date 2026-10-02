@@ -2,7 +2,7 @@ units:
   px: cx + 2
   py: cy + 2
   screwSize: 1.5 # defaults to M2 screw
-  standoffSize: 3.5
+  standoffSize: 2.5
 
 points:
   key:
@@ -18,34 +18,34 @@ points:
       columns:
         pinkie:
           rows:
-            bottom.from_net: P7
-            home.from_net: P15
-            top.from_net: P4
+            bottom.from_net: P15
+            home.from_net: P16
+            top.from_net: P5
         ring:
           rows:
-            bottom.from_net: P6
-            home.from_net: P18
-            top.from_net: P3
+            bottom.from_net: P14
+            home.from_net: P8
+            top.from_net: P4
           key:
             stagger: 12
         middle:
           rows:
             bottom.from_net: P10
-            home.from_net: P19
-            top.from_net: P2
+            home.from_net: P7
+            top.from_net: P3
           key:
             stagger: 7
         index:
           rows:
-            bottom.from_net: P16
-            home.from_net: P20
-            top.from_net: P0
+            bottom.from_net: P18
+            home.from_net: P6
+            top.from_net: P2
           key:
             stagger: -5
         far:
           rows:
-            bottom.from_net: P14
-            home.from_net: P21
+            bottom.from_net: P21
+            home.from_net: P0
             top.from_net: P1
           key:
             stagger: -3
@@ -60,10 +60,10 @@ points:
       columns:
         inner:
           rows:
-            home.from_net: P8
+            home.from_net: P19
         outer:
           rows:
-            home.from_net: P9
+            home.from_net: P20
           key:
             column_net: P7
             rotate: -10
@@ -71,7 +71,7 @@ points:
             stagger: -2
 
 outlines:
-  _rawKeysOutline:
+  _rawKeyOutline:
     - what: rectangle
       where: true # Matches all keys
       size: [cx+2, cy+2]
@@ -81,91 +81,98 @@ outlines:
       operation: stack
       points:
         - ref: main_far_home
-          shift: [0.5cx,0.5cy]
+          shift: [0.5px,0.5py]
         - ref: main_far_home
-          shift: [1.6cx,0.5cy]
+          shift: [0.5px,0.5py]
         - ref: main_far_bottom
-          shift: [1.6cx,-0.5cy]
+          shift: [0.5px,-0.5py]
         - ref: thumb_outer_home
-          shift: [0.5cx+1,0.5cy+1]
+          shift: [0.5px,0.5py]
         - ref: thumb_outer_home
-          shift: [0.5cx+1,-0.5cy-1]
+          shift: [0.5px,-0.5py]
         - ref: thumb_inner_home
-          shift: [-0.5cx-1,-0.5cy-1]
+          shift: [-0.5px,-0.5py]
         - ref: main_ring_bottom
-          shift: [0.5cx+1,-0.5cy-1]
+          shift: [0.5px,-0.5py]
         - ref: main_pinkie_bottom
-          shift: [-0.5cx-1,0.5cy+1]
+          shift: [-0.5px,0.5py]
 
   _mounting:
     - what: circle
       radius: screwSize
       where:
         ref: [main_ring_top]
-        shift: [-5, 3.75]
+        shift: [-0.3cx, -0.3cy]
     - what: circle
       radius: screwSize
       where:
-        ref: [main_far_top]
-        shift: [-5, 3.75]
+        ref: [main_index_top]
+        shift: [0.3cx, -0.25cy]
     - what: circle
       radius: screwSize
       where:
         ref: [main_ring_bottom]
-        shift: [-5, 3.75]
+        shift: [-0.3cx, -0.3cy]
     - what: circle
       radius: screwSize
       where:
-        ref: [main_far_bottom]
-        shift: [-5, 3.75]
+        ref: [main_index_bottom]
+        shift: [0.3cx, -0.3cy]
     - what: circle
       radius: screwSize
       where:
-        ref: [thumb_outer_home]
-        shift: [-5, 3.75]
+        ref: [thumb_inner_home]
+        shift: [0.5cx, -0.2cy]
 
   _standoff:
     - what: circle
       radius: standoffSize
       where:
         ref: [main_ring_top]
-        shift: [-5, 3.75]
+        shift: [-0.3cx, -0.3cy]
     - what: circle
       radius: standoffSize
       where:
-        ref: [main_far_top]
-        shift: [-5, 3.75]
+        ref: [main_index_top]
+        shift: [0.3cx, -0.25cy]
     - what: circle
       radius: standoffSize
       where:
         ref: [main_ring_bottom]
-        shift: [-5, 3.75]
+        shift: [-0.3cx, -0.3cy]
     - what: circle
       radius: standoffSize
       where:
-        ref: [main_far_bottom]
-        shift: [-5, 3.75]
+        ref: [main_index_bottom]
+        shift: [0.3cx, -0.3cy]
     - what: circle
       radius: standoffSize
       where:
-        ref: [thumb_outer_home]
-        shift: [-5, 3.75]
+        ref: [thumb_inner_home]
+        shift: [0.5cx, -0.2cy]
 
   _powerBtn:
     - what: rectangle
       size: [5, 8]
       where:
         ref: main_far_bottom
-        shift: [23, -16]
-        rotate: -113.5
+        shift: [11, -15]
+        rotate: -54
+
+  _usbc:
+    - what: rectangle
+      size: [5, 8]
+      where:
+        ref: main_far_top
+        shift: [10, -13]
 
   board:
     - name: _fill
     - operation: add
-      name: _rawKeysOutline
+      name: _rawKeyOutline
       # fillet: 1.4
 
-  boardWithGuides:
+  boardWithMounting:
     - name: board
     - operation: stack
       name: _standoff
@@ -173,10 +180,12 @@ outlines:
       name: _mounting
     - operation: stack
       name: _powerBtn
+    - operation: stack
+      name: _usbc
 
 
 pcbs:
-  ergotyper_v2:
+  ergodeer_v3:
     outlines:
       main:
         outline: board
@@ -184,10 +193,11 @@ pcbs:
       controller:
         what: nice_nano_2
         where:
-          ref: main_far_home
-          shift: [19, -9]
+          ref: main_far_top
+          shift: [-7.5, -13]
+          rotate: -90
         params:
-          reversible: true
+          reversible: false
 
       choc_hotswap:
         what: choc
@@ -205,7 +215,7 @@ pcbs:
         params:
           net: GND
         adjust:
-          shift: [0, -3]
+          shift: [2, 2]
     
       net_vias:
         what: via
@@ -213,36 +223,67 @@ pcbs:
         params:
           net: "{{from_net}}"
         adjust:
-          shift: [0, 3]
+          shift: [-1, 3.5]
     
       battery_connector:
         what: bat_jst
         where:
           ref: main_far_bottom
-          shift: [7, -13]
-          rotate: 90
+          shift: [4, -12]
+          rotate: -90
         params:
           BAT_P: BAT_P
           BAT_N: GND
           reversible: true
       
+      slider:
+        what: slider
+        where:
+          ref: main_far_bottom
+          shift: [11, -15]
+          rotate: -54
+        params:
+          from: BAT_P
+          to: RAW
+
       slider_btm:
         what: slider
         where:
           ref: main_far_bottom
-          shift: [23, -16]
-          rotate: -113.5
+          shift: [11, -15]
+          rotate: -54
         params:
           side: B
           from: BAT_P
           to: RAW
 
-      slider:
-        what: slider
+      holeTopLeft:
+        what: mountinghole
         where:
-          ref: main_far_bottom
-          shift: [23, -16]
-          rotate: -113.5
-        params:
-          from: BAT_P
-          to: RAW
+          ref: [main_ring_top]
+          shift: [-0.3cx, -0.3cy]
+
+      holeTopRight:
+        what: mountinghole
+        where:
+          ref: [main_index_top]
+          shift: [0.3cx, -0.25cy]
+
+      holeBottomLeft:
+        what: mountinghole
+        where:
+          ref: [main_ring_bottom]
+          shift: [-0.3cx, -0.3cy]
+
+      holeBottomRight:
+        what: mountinghole
+        where:
+          ref: [main_index_bottom]
+          shift: [0.3cx, -0.3cy]
+
+      holeThumb:
+        what: mountinghole
+        where:
+          ref: [thumb_inner_home]
+          shift: [0.5cx, -0.2cy]
+
